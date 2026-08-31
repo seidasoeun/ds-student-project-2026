@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClassName = "it.unitn.ds1.VirtualSynch"
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+def versions = [
+    ScalaBinary: "2.13"
+]
+
+dependencies {
+    implementation platform("com.typesafe.akka:akka-bom_${versions.ScalaBinary}:2.6.13")
+
+    implementation "com.typesafe.akka:akka-actor_${versions.ScalaBinary}"
+    testImplementation "com.typesafe.akka:akka-testkit_${versions.ScalaBinary}"
+
+    // Test dependencies
+    testImplementation "com.typesafe.akka:akka-testkit_${versions.ScalaBinary}"
+	testImplementation(platform('org.junit:junit-bom:6.0.1'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
+	testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+}
+
+compileJava {
+    options.compilerArgs += ["-Xlint:deprecation"]
+}
+
+run {
+    standardInput = System.in
+}
